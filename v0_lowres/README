@@ -1,0 +1,8 @@
+Run with following options:
+
+python pyplis_read_plot.py ./ LocA --experimenttype=SUNSZA40WQBLC --timestampBG=005 --InputFolderBG=./ --experimenttypeBG=SUNSZA40W_BG --PlotType=Velocity --timestart=001 --timeend=005 --timestep=1
+
+
+This produces some output on screen. Last part should be familiar to you. Plots will be in same folder as input files (this folder).
+
+The script pyplis_read_plot.py does the velocity estimate. Search for the string "Velocity" and you should find some familiar code.
