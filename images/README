@@ -1,0 +1,10 @@
+Input and output files from MYSTIC simulation of LES generated plumes. 
+The simulations are described by Kylling et al. (2020).
+Used by pyplis_velocity_analysis.py. 
+
+References:
+Kylling, A., Ardeshiri, H., Cassiani, M., Dinger, A. S., Park, S.-Y., Pisso, I., 
+Schmidbauer, N., Stebel, K., and Stohl, A.: Can statistics of turbulent tracer 
+dispersion be inferred from camera observations of SO2 in the ultraviolet? A 
+modelling study, Atmos. Meas. Tech., 13, 3303–3318, 
+https://doi.org/10.5194/amt-13-3303-2020, 2020.
