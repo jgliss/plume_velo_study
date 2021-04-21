@@ -1,0 +1,23 @@
+data_files_path /xnilu_wrk/users/aky/develop/libRadtran_njord/data/
+sza 40.0
+mc_sample_grid 400 88
+mc_backward 
+wavelength 300.0 350.5
+albedo 0.0
+profile_properties Plumexkfgh ../Data/XSections/SO2_Hermans_298_air_MYSTIC interpolate
+umu -0.995000
+source solar /xnilu_wrk/users/aky/develop/libRadtran_njord/data/solar_flux/kurudz_0.1nm.dat
+phi0 90.0
+mc_std 
+phi 180.000000
+mc_minphotons 200
+mc_sensorposition    500.0      0.0      1.0
+wavelength_grid_file ../Data/XSections/uvspec_SO2_wavelength_grid_file
+mc_panorama_view 157.000000 203.000000 86.000000 96.000000
+profile_file Plumexkfgh 3d  ../Experiments/palm_tomo_Rena/W330TSO2SUNSZA40WQBLC.profile
+atmosphere_file /xnilu_wrk/users/aky/develop/libRadtran_njord/data/atmmod/afglms.dat
+mc_panorama_alignment mu
+mc_photons 200
+rte_solver montecarlo
+mc_vroom on
+mol_abs_param crs

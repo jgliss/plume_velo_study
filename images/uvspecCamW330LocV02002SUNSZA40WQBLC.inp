@@ -1,0 +1,24 @@
+data_files_path ./data/
+sza 40.0
+mc_sample_grid 100 264
+mc_backward 
+wavelength 300.0 350.5
+profile_file Plumecistp 3d  ./Experiments/palm_tomo_Rena_HT_Velo/W330TSO2SUNSZA40WQBLC.profile
+albedo 0.0
+umu -0.860000
+profile_properties Plumecistp ./Data/XSections/SO2_Hermans_298_air_MYSTIC interpolate
+source solar ./data/solar_flux/kurudz_0.1nm.dat
+phi0 90.0
+mc_std 
+phi 180.000000
+mc_minphotons 100
+mc_sensorposition    900.0      0.0      1.0
+wavelength_grid_file ./Data/XSections/uvspec_SO2_wavelength_grid_file
+mc_panorama_view 174.250000 185.750000 81.000000 111.000000
+atmosphere_file ./data/atmmod/afglms.dat
+mc_panorama_alignment mu
+mc_photons 100
+rte_solver montecarlo
+quiet 
+mc_vroom on
+mol_abs_param crs
