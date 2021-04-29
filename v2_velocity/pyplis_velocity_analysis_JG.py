@@ -1,9 +1,10 @@
-import sys
 import warnings
 warnings.filterwarnings("ignore", message="numpy.dtype size changed")
 warnings.filterwarnings("ignore", message="numpy.ufunc size changed")
 import argparse
-from matplotlib.legend import rcParams
+from matplotlib import rcParams
+import shutil
+CLEAR = True
 
 # -*- coding: utf-8 -*-
 """
@@ -15,9 +16,7 @@ This script .
 """
 import numpy as np
 import pyplis
-#from matplotlib.pyplot import show, subplots, close
 import matplotlib.pyplot as plt
-import pylab
 
 import datetime
 import Image
@@ -329,8 +328,6 @@ def downscale_images_and_pcs_lines(images, pcs_lines, pyrlevels_down=3):
 
 ### SCRIPT MAIN FUNCTION
 if __name__=="__main__":
-    CLEAR = True # delete output_new before rerunning
-
     import os
 
     FONTSIZE=20
@@ -372,10 +369,15 @@ if __name__=="__main__":
 
     outdir = './output_new'+'/'+loc+'_'+str(COL_NUM2)+'/'
     txtfile = outdir+'velocities.txt'
-    ftxt = open(txtfile,'w')
+    # output for results withoug multigauss analysis
+    txtfile_noMG = outdir+'velocities_noMG.txt'
+
 
     if not os.path.exists(outdir):
-        os.mkdir(outdir)
+        os.makedirs(outdir, exist_ok=True)
+
+    ftxt = open(txtfile,'w')
+    ftxt_noMG = open(txtfile_noMG,'w')
 
     if CLEAR_OUTPUT:
 
@@ -576,30 +578,43 @@ if __name__=="__main__":
     props = pyplis.plumespeed.LocalPlumeProperties(line.line_id,
                                                    color=line.color)
 
-    veff = []
-    veff_err = []
-    mus=[]
+
+    veff = {0 : [], # without multigauss fit
+            1: []} # without multigauss fit
+    veff_err = {0 : [], 1: []}
+    mus= {0 : [], 1: []}
+
+
+
     for i in range(len(images)-1):
         flow.calc_flow(images[i], images[i+1])
         flow.roi_abs = line._roi_from_rot_rect()
-        props.get_and_append_from_farneback(flow, line=line)
+        # JGLISS: the following function will do the histogram analysis of
+        # the retrieved flow field and based on that will calculate the
+        # average velocity in the rectangle around the line. Use
+        # book "dir_multi_gauss" to activate / deactivate multigauss fit
+        # retrieval in histogram analysis.
+        for withMG in (0, 1):
+            props.get_and_append_from_farneback(flow, line=line,
+                                                dir_multi_gauss=withMG)
 
-        veff1, veff_err1 = props.get_velocity(pix_dist_m=DX,
-                                              normal_vec=pcs2.normal_vector,
-                                              sigma_tol=flow.settings.hist_sigma_tol)
-        print("veff1,  veff_err1", i, veff1,  veff_err1)
-        fig, axd = plt.subplots(1,1,figsize=(16,10))
-        (_,  mu,  sigma) = flow.plot_orientation_histo(pix_mask=None,
-                                                       apply_fit=True,
-                                                       ax=axd, color='red')
-        plt.close()
-        print('mu, sigma', mu, sigma);
-        if i>0:
-            veff.append(veff1)
-            veff_err.append(veff_err1)
-            mus.append(mu)
+            veff1, veff_err1 = props.get_velocity(pix_dist_m=DX,
+                                                  normal_vec=pcs2.normal_vector,
+                                                  sigma_tol=flow.settings.hist_sigma_tol)
+            print("veff1,  veff_err1", i, veff1,  veff_err1)
+            fig, axd = plt.subplots(1,1,figsize=(16,10))
+            (_,  mu,  sigma) = flow.plot_orientation_histo(pix_mask=None,
+                                                           apply_fit=True,
+                                                           ax=axd, color='red')
+            plt.close()
+            print('mu, sigma', mu, sigma);
+            if i>0:
+                veff[withMG].append(veff1)
+                veff_err[withMG].append(veff_err1)
+                mus[withMG].append(mu)
 
-    print("veff_avg", np.average(veff), np.std(veff))
+    print("veff_avg (NO MULTIGAUSS FIT)", np.nanmean(veff[0]), np.std(veff[0]))
+    print("veff_avg (WITH MULTIGAUSS FIT)", np.nanmean(veff[1]), np.std(veff[1]))
 
     fig, ax = plt.subplots(1,1,figsize=(16,10))
     flow.plot(ax=ax)
@@ -683,7 +698,11 @@ if __name__=="__main__":
           .format(lag, COL_NUM1, DT, DX, velocity))
 
 
-    print('VELOCITIES {:s} {:003d} {:7.4f} {:7.4f} {:7.4f} {:7.4f} {:7.4f}'.format(loc,  COL_NUM2, np.average(veff), np.std(veff), velocity, np.average(mus), np.std(mus)))
+    print('VELOCITIES (with MULTIGAUSS) {:s} {:003d} {:7.4f} {:7.4f} {:7.4f} {:7.4f} {:7.4f}'
+          .format(loc,  COL_NUM2, np.nanmean(veff[1]), np.nanstd(veff[1]), velocity, np.nanmean(mus[1]), np.nanstd(mus[1])))
     print('txtfile', txtfile)
-    ftxt.write('{:003d} {:7.4f} {:7.4f} {:7.4f} {:7.4f} {:7.4f}\n'.format(COL_NUM2, np.average(veff), np.std(veff), velocity, np.average(mus), np.std(mus)))
+    ftxt.write('{:003d} {:7.4f} {:7.4f} {:7.4f} {:7.4f} {:7.4f}\n'.format(COL_NUM2, np.nanmean(veff[1]), np.nanstd(veff[1]), velocity, np.nanmean(mus[1]), np.nanstd(mus[1])))
     ftxt.close()
+
+    ftxt_noMG.write('{:003d} {:7.4f} {:7.4f} {:7.4f} {:7.4f} {:7.4f}\n'.format(COL_NUM2, np.nanmean(veff[0]), np.nanstd(veff[0]), velocity, np.nanmean(mus[0]), np.nanstd(mus[0])))
+    ftxt_noMG.close()
