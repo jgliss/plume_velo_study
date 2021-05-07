@@ -78,6 +78,9 @@
 
 \firstpage{1}
 
+\tableofcontents
+
+
 \maketitle
 
 \begin{abstract}
@@ -97,7 +100,8 @@ To come
   \\
   \begin{itemize}
   \item
-    Vary distacne between PCS-lines.
+    Is flow of plume at plume cross section representative for the
+    mean flow?
   \item
     Plot lag shift
   \item
@@ -289,12 +293,19 @@ measurements ($\approx$~1\%).
   direction is also derived.}
 
 
+\begin{Verbatim}
+disp_skip=10, hist_dir_binres=5,  hist_sigma_tol=4
+\end{Verbatim}
+
 \subsubsection{Velocity from cross correlation}
 \textcolor{red}{Describe how it is calculated}
 
 
 \section{Results}
 \subsection{Velocity analysis: synthetic data}
+\textcolor{red}{Skipping images gives worse or no results
+}
+
 In Fig.~\ref{fig:Fig_Image_LocA} is shown apparent absorbances for the
 eight time steps used for the velocity analysis of camera A images.
 % source velocity.sh
@@ -342,37 +353,57 @@ A total of ten time steps were used for these cameras and the M-line
 was located at 10, 20, 30, 40, 50, 60 and 70.
 
 The velocities  at different PCS lines using the cross correlation and
-optical flow methods are shown for camera A in
-Fig.~\ref{fig:Fig_Velo_LocA} and cameras B, C and D in
-Fig.~\ref{fig:Fig_Velo_LocV}.
-% source velocity.sh
+optical flow methods are shown in
+Figs.~\ref{fig:Fig_Velo_LocA}-\ref{fig:Fig_Velo_LocV03_istep_all}
+for camera A, B, C and D.
+% python PlotVelocities.py
 %
 \begin{figure}[!htb]
   \begin{center}
-    \includegraphics[width=0.75\textwidth]{Fig_Velo_LocA.pdf}\\
+    \includegraphics[width=0.75\textwidth]{Fig_Velo_LocA_istep_all.pdf}\\
     \caption{\label{fig:Fig_Velo_LocA}
       (Top) The average plume velocity as determined by the optical
       flow method (dots) where error bars indicate the standard
       deviation. The velocity is determined at a plume cross section
-      at the pixel given at the x-axis. The solid line is the plume
-      velocity determined using cross correlation analysis.
+      at the pixel given at the x-axis. The solid lines with cross
+      markers are the plume  velocities determined for various PCS
+      lines separations using cross correlation analysis. The black
+      solid line is the mean velocity at the source.
       (Bottom) The average plume direction and standard deviation
       indicated by error bars. Determined with the optical flow analysis.
     }
   \end{center}
 \end{figure}
+
 \begin{figure}[!htb]
   \begin{center}
-    \includegraphics[width=0.75\textwidth]{Fig_Velo_LocV.pdf}\\
-    \caption{\label{fig:Fig_Velo_LocV}
-      Similar to Fig.~\ref{fig:Fig_Velo_LocA}, but for cameras B,
-      C and D.
+    \includegraphics[width=0.75\textwidth]{Fig_Velo_LocV01_istep_all.pdf}\\
+    \caption{\label{fig:Fig_Velo_LocV01_istep_all}
+      Similar to Fig.~\ref{fig:Fig_Velo_LocA}, but for camera B.
     }
   \end{center}
 \end{figure}
-Also shown in Figs.~\ref{fig:Fig_Velo_LocA} and
-\ref{fig:Fig_Velo_LocV} are the plume directions as derived from the
-optical flow.
+
+\begin{figure}[!htb]
+  \begin{center}
+    \includegraphics[width=0.75\textwidth]{Fig_Velo_LocV02_istep_all.pdf}\\
+    \caption{\label{fig:Fig_Velo_LocV02_istep_all}
+      Similar to Fig.~\ref{fig:Fig_Velo_LocA}, but for camera C.
+    }
+  \end{center}
+\end{figure}
+
+\begin{figure}[!htb]
+  \begin{center}
+    \includegraphics[width=0.75\textwidth]{Fig_Velo_LocV03_istep_all.pdf}\\
+    \caption{\label{fig:Fig_Velo_LocV03_istep_all}
+      Similar to Fig.~\ref{fig:Fig_Velo_LocA}, but for camera D.
+    }
+  \end{center}
+\end{figure}
+Also shown in
+Figs.~\ref{fig:Fig_Velo_LocA}-\ref{fig:Fig_Velo_LocV03_istep_all} are
+the plume directions as derived from the optical flow.
 
 \textcolor{red}{
   Some velocities missing because:
@@ -382,15 +413,18 @@ plumespeed.py(l3088,local_flow_params()): Aborting histogram analysis:
 Multi-Gauss fit yielded additional Gaussian exceeding significance
 thresh of 0.2 in histo of orientation angles
 
-Significance: 30.67963866968083 %
-Significance: 31.873164606888327 %
-Significance: 23.06423881656792 %
-Significance: 35.02810714760371 %
-Significance: 61.6043930700684 %
-Significance: 28.69744270222855 %
-Significance: 59.029779606658074 %
-Significance: 30.697942504522068 %
-Significance: 21.73517476305695 %
+Significance: 30.256409572491755 %
+Significance: 47.5273164980807 %
+Significance: 27.741944804054036 %
+Significance: 42.48168580487771 %
+Significance: 25.362599245201633 %
+Significance: 28.62424540776451 %
+Significance: 47.8784411296472 %
+Significance: 26.158428603562978 %
+Significance: 28.358900095950613 %
+Significance: 46.69930035068274 %
+Significance: 26.8223272623612 %
+Significance: 30.41657169547378 %
 
 Limit hard-coded to 0.2 in plumespeed.py
 
